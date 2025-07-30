@@ -11,4 +11,5 @@ add_executable(main main.c
                     utils/utils.c
                     var_int.c
                     utils/protocol_utils.c
+                    packet_handlers.c
                     packet_definition.c)
