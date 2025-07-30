@@ -28,17 +28,25 @@ void write_status_response(char *const          dst,
     char *buffer = calloc(1000, sizeof(char));
     char *writer = buffer;
 
+    // a bunch of --writer because strings end in null char
+
     WRITE_CONST_STRING("{\"version\":{\"name\":\"", writer);
+    --writer;
     WRITE_STRING(value.version_name, writer);
+    --writer;
 
     WRITE_CONST_STRING("\",\"protocol\":", writer);
+    --writer;
     writer += sprintf(writer, "%d", value.version_protocol);
 
     WRITE_CONST_STRING("},\"players\":{\"max\":", writer);
+    --writer;
     writer += sprintf(writer, "%d", value.max_players);
 
     WRITE_CONST_STRING(",\"online\":0,\"sample\":[]},\"description\":{\"text\":\"", writer);
+    --writer;
     WRITE_STRING(value.motd, writer);
+    --writer;
 
     WRITE_CONST_STRING("\"},\"ensuresSecureChat\":true}", writer);
 
