@@ -79,6 +79,15 @@ int main() {
                 }
                 break;
             case STATUS:
+                switch ((C2SStatusPacket)packet_id) {
+                case STATUS_REQUEST:
+                    handle_status_request(conn, BUFFER_READER, BUFFER_LENGTH);
+                    break;
+                case PING_REQUEST:
+                    handle_ping_request(conn, BUFFER_READER, BUFFER_LENGTH);
+                    break;
+                }
+                break;
             case LOGIN:
             case CONFIGURATION:
             case PLAY:
