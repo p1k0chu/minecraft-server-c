@@ -17,6 +17,16 @@ void write_prefixed_bytes(char *const       dst,
     *out_written_bytes += n;
 }
 
+void *read_prefixed_bytes(const char *src, uint *out_consumed_bytes) {
+    int length = read_var_int(src, out_consumed_bytes);
+
+    char *buffer = malloc(length);
+    memcpy(buffer, src + *out_consumed_bytes, length);
+    *out_consumed_bytes += length;
+
+    return buffer;
+}
+
 void send_var_int(int sockfd, int value) {
     char buffer[5];
     uint length;

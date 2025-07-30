@@ -64,14 +64,8 @@ HandshakePacket read_handshake_packet(const char *const src, uint *const out_con
 
     protocol = read_var_int(src, out_consumed_bytes);
 
-    {
-        int len = read_var_int(src + *out_consumed_bytes, &tmp);
-        *out_consumed_bytes += tmp;
-
-        server_address = calloc(len + 1, sizeof(char));
-        memcpy(server_address, src + *out_consumed_bytes, len);
-        *out_consumed_bytes += len;
-    }
+    server_address = read_prefixed_bytes(src + *out_consumed_bytes, &tmp);
+    *out_consumed_bytes += tmp;
 
     server_port = *(const ushort *)(src + *out_consumed_bytes);
     *out_consumed_bytes += sizeof(short);
