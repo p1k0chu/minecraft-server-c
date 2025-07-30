@@ -48,7 +48,7 @@ void write_status_response(char *const          dst,
     WRITE_STRING(value.motd, writer);
     --writer;
 
-    WRITE_CONST_STRING("\"},\"ensuresSecureChat\":true}", writer);
+    WRITE_CONST_STRING("\"},\"enforcesSecureChat\":false}", writer);
 
     write_prefixed_bytes(dst, buffer, strlen(buffer), out_written_bytes);
     free(buffer);
