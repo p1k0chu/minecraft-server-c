@@ -3,10 +3,10 @@
 #include <sys/types.h>
 
 typedef struct StatusResponse {
-    const char *version_name;
+    const char *const version_name;
     const int   version_protocol;
     const uint  max_players;
-    const char *motd;
+    const char *const motd;
 } StatusResponse;
 
 void write_status_response(char *dst, StatusResponse value, uint *out_written_bytes);
