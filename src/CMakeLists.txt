@@ -7,4 +7,6 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror")
 
 include_directories(include)
 
-add_executable(main main.c utils/utils.c var_int.c)
+add_executable(main main.c
+                    utils/utils.c
+                    var_int.c)
