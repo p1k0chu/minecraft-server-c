@@ -15,7 +15,6 @@
 void handle_handshake(PlayerConnection *const conn,
                       const char *const       packet_bytes,
                       const size_t            n_bytes) {
-    UNUSED(conn);
     UNUSED(n_bytes);
 
     uint            tmp;
