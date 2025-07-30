@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project("project3" LANGUAGES C)
+project("minecraft-server-c" LANGUAGES C)
 
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
