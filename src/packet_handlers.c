@@ -40,7 +40,6 @@ void handle_handshake(PlayerConnection conn, const char *const packet_bytes, con
 void handle_status_request(const PlayerConnection conn,
                            const char *const      packet_bytes,
                            const size_t           n_bytes) {
-    UNUSED(conn);
     UNUSED(packet_bytes);
     UNUSED(n_bytes);
 
