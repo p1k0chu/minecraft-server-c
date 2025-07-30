@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 /**
- * returns amoung of bytes written
+ * returns amount of bytes written
  */
 uint32_t write_prefixed_bytes(char *dst, const char *src, int n);
 
