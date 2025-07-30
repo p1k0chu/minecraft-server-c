@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sys/types.h>
+#include <stdint.h>
 
 typedef enum HandshakeIntent {
     STATUS_INTENT   = 1,
@@ -9,24 +9,40 @@ typedef enum HandshakeIntent {
 } HandshakeIntent;
 
 typedef struct HandshakePacket {
-    const int             protocol_version;
-    char *const           server_address;
-    const unsigned short  server_port;
-    const HandshakeIntent intent;
+    int             protocol_version;
+    char           *server_address;
+    unsigned short  server_port;
+    HandshakeIntent intent;
 } HandshakePacket;
 
 void free_HandshakePacket(HandshakePacket packet);
 
 typedef struct StatusResponse {
-    const char *const version_name;
-    const int         version_protocol;
-    const uint        max_players;
-    const char *const motd;
+    const char *version_name;
+    int         version_protocol;
+    uint32_t    max_players;
+    const char *motd;
 } StatusResponse;
 
-void write_status_response(char *dst, StatusResponse value, uint *out_written_bytes);
+/**
+ * returns the amount of bytes written
+ */
+uint32_t write_status_response(char *dst, StatusResponse value);
 
-HandshakePacket read_handshake_packet(const char *src, uint *out_consumed_bytes);
-long            read_ping_request(const char *src, uint *out_consumed_bytes);
-void            write_pong_response(char *dst, long timestamp, uint *out_written_bytes);
+/**
+ * reads one HandshakePacket from src into dst and returns amount of bytes read
+ */
+uint32_t read_handshake_packet(HandshakePacket *dst, const char *src);
+
+/**
+ * reads one ping request from src into dst and returns amount of bytes read
+ *
+ * the whole ping request is just one long (timestamp)
+ */
+uint32_t read_ping_request(long *dst, const char *src);
+
+/**
+ * returns the amount of bytes written
+ */
+uint32_t write_pong_response(char *dst, long timestamp);
 

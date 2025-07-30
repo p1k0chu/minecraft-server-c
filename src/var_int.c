@@ -4,16 +4,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int read_var_int(const char *const src, uint *const out_consumed_bytes) {
-#define index (*out_consumed_bytes)
+uint32_t read_var_int(int *const dst, const char *const src) {
+    *dst = 0;
 
-    int  result = 0;
-    char byte;
-    index = 0;
+    char     byte;
+    uint32_t index = 0;
 
     do {
-        byte   = src[index];
-        result = result | ((byte & 127) << (index++ * 7));
+        byte = src[index];
+        *dst = *dst | ((byte & 127) << (index++ * 7));
 
         if (index > 5) {
             fprintf(stderr, "VarInt is too long");
@@ -21,16 +20,12 @@ int read_var_int(const char *const src, uint *const out_consumed_bytes) {
         }
     } while ((byte & CONTINUATION_BIT) != 0);
 
-    return result;
-
-#undef char_src
-#undef index
+    return index;
 }
 
-void write_var_int(char *const dst, int value, uint *const out_written_bytes) {
-#define index (*out_written_bytes)
+uint32_t write_var_int(char *const dst, int value) {
+    uint32_t index = 0;
 
-    index = 0;
     while ((value & CONTINUATION_BIT) != 0) {
         dst[index++] = (value & 127) | 128;
 
@@ -38,6 +33,5 @@ void write_var_int(char *const dst, int value, uint *const out_written_bytes) {
     }
     dst[index++] = value & 127;
 
-#undef char_dst
-#undef index
+    return index;
 }

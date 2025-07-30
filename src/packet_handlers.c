@@ -4,7 +4,6 @@
 #include "packet_ids.h"
 #include "server.h"
 #include "utils/protocol_utils.h"
-#include "utils/utils.h"
 #include "var_int.h"
 
 #include <stdio.h>
@@ -12,14 +11,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-void handle_handshake(PlayerConnection *const conn,
-                      const char *const       packet_bytes,
-                      const size_t            n_bytes) {
-    UNUSED(conn);
-    UNUSED(n_bytes);
+void handle_handshake(PlayerConnection *const conn, const char *const packet_bytes, const size_t) {
 
-    uint            tmp;
-    HandshakePacket packet = read_handshake_packet(packet_bytes, &tmp);
+    HandshakePacket packet;
+    read_handshake_packet(&packet, packet_bytes);
 
     switch (packet.intent) {
     case STATUS_INTENT:
@@ -39,22 +34,15 @@ void handle_handshake(PlayerConnection *const conn,
     free_HandshakePacket(packet);
 }
 
-void handle_status_request(PlayerConnection *const conn,
-                           const char *const       packet_bytes,
-                           const size_t            n_bytes) {
-    UNUSED(packet_bytes);
-    UNUSED(n_bytes);
-
+void handle_status_request(PlayerConnection *const conn, const char *const, const size_t) {
     StatusResponse resp = {.version_name     = "1.21.8",
                            .version_protocol = 772,
                            .max_players      = 20,
                            .motd             = "Hello from c!"};
     char           buffer[6969];
-    uint           length;
-    uint           tmp;
-    write_var_int(buffer, STATUS_RESPONSE, &length);
-    write_status_response(buffer + length, resp, &tmp);
-    length += tmp;
+    uint32_t       length;
+    length = write_var_int(buffer, STATUS_RESPONSE);
+    length += write_status_response(buffer + length, resp);
 
     send_var_int(conn->socket, length);
     send(conn->socket, buffer, length, 0);
@@ -62,16 +50,15 @@ void handle_status_request(PlayerConnection *const conn,
 
 void handle_ping_request(PlayerConnection *const conn,
                          const char *const       packet_bytes,
-                         const size_t            n_bytes) {
-    UNUSED(n_bytes);
+                         const size_t) {
+    uint32_t length;
 
-    uint length;
-
-    long timestamp = read_ping_request(packet_bytes, &length);
+    long timestamp;
+    read_ping_request(&timestamp, packet_bytes);
 
     // VarInt + long
     char buffer[5 + sizeof(long)];
-    write_var_int(buffer, PONG_RESPONSE, &length);
+    length                     = write_var_int(buffer, PONG_RESPONSE);
     *(long *)(buffer + length) = timestamp;
     length += sizeof(long);
 

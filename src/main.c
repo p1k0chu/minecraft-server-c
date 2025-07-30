@@ -49,7 +49,7 @@ int main() {
         int              packet_length;
         char            *buffer        = NULL;
         int              buffer_length = 0;
-        uint             buffer_index  = 0;
+        uint32_t         buffer_index  = 0;
 
 #define BUFFER_READER (buffer + buffer_index)
 #define BUFFER_LENGTH (buffer_length - buffer_index)
@@ -68,7 +68,7 @@ int main() {
 
             recv(socket, buffer, packet_length, 0);
 
-            packet_id = read_var_int(buffer, &buffer_index);
+            buffer_index = read_var_int(&packet_id, buffer);
 
             switch (conn.stage) {
             case HANDSHAKING:
