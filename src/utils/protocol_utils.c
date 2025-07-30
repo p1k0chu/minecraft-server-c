@@ -7,30 +7,27 @@
 #include <string.h>
 #include <sys/socket.h>
 
-void write_prefixed_bytes(char *const       dst,
-                          const char *const src,
-                          const int         n,
-                          uint             *out_written_bytes) {
-    write_var_int(dst, n, out_written_bytes);
+uint write_prefixed_bytes(char *const dst, const char *const src, const int n) {
+    uint length = write_var_int(dst, n);
 
-    memcpy(dst + *out_written_bytes, src, n);
-    *out_written_bytes += n;
+    memcpy(dst + length, src, n);
+    return length + n;
 }
 
-void *read_prefixed_bytes(const char *src, uint *out_consumed_bytes) {
-    int length = read_var_int(src, out_consumed_bytes);
+uint read_prefixed_bytes(char **const dst, const char *src) {
+    int length;
+    uint bytes_read = read_var_int(&length, src);
 
     char *buffer = malloc(length);
-    memcpy(buffer, src + *out_consumed_bytes, length);
-    *out_consumed_bytes += length;
+    memcpy(buffer, src + bytes_read, length);
+    *dst = buffer;
 
-    return buffer;
+    return bytes_read + length;
 }
 
 void send_var_int(int sockfd, int value) {
     char buffer[5];
-    uint length;
-    write_var_int(buffer, value, &length);
+    uint length = write_var_int(buffer, value);
 
     send(sockfd, buffer, length, 0);
 }

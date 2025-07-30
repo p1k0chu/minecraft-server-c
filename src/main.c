@@ -68,7 +68,7 @@ int main() {
 
             recv(socket, buffer, packet_length, 0);
 
-            packet_id = read_var_int(buffer, &buffer_index);
+            buffer_index = read_var_int(&packet_id, buffer);
 
             switch (conn.stage) {
             case HANDSHAKING:

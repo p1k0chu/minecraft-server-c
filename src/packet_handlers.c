@@ -17,8 +17,8 @@ void handle_handshake(PlayerConnection *const conn,
                       const size_t            n_bytes) {
     UNUSED(n_bytes);
 
-    uint            tmp;
-    HandshakePacket packet = read_handshake_packet(packet_bytes, &tmp);
+    HandshakePacket packet;
+    read_handshake_packet(&packet, packet_bytes);
 
     switch (packet.intent) {
     case STATUS_INTENT:
@@ -50,10 +50,8 @@ void handle_status_request(PlayerConnection *const conn,
                            .motd             = "Hello from c!"};
     char           buffer[6969];
     uint           length;
-    uint           tmp;
-    write_var_int(buffer, STATUS_RESPONSE, &length);
-    write_status_response(buffer + length, resp, &tmp);
-    length += tmp;
+    length = write_var_int(buffer, STATUS_RESPONSE);
+    length += write_status_response(buffer + length, resp);
 
     send_var_int(conn->socket, length);
     send(conn->socket, buffer, length, 0);
@@ -66,11 +64,12 @@ void handle_ping_request(PlayerConnection *const conn,
 
     uint length;
 
-    long timestamp = read_ping_request(packet_bytes, &length);
+    long timestamp;
+    read_ping_request(&timestamp, packet_bytes);
 
     // VarInt + long
     char buffer[5 + sizeof(long)];
-    write_var_int(buffer, PONG_RESPONSE, &length);
+    length = write_var_int(buffer, PONG_RESPONSE);
     *(long *)(buffer + length) = timestamp;
     length += sizeof(long);
 

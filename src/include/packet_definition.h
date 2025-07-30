@@ -24,9 +24,25 @@ typedef struct StatusResponse {
     const char *motd;
 } StatusResponse;
 
-void write_status_response(char *dst, StatusResponse value, uint *out_written_bytes);
+/**
+ * returns the amount of bytes written
+ */
+uint write_status_response(char *dst, StatusResponse value);
 
-HandshakePacket read_handshake_packet(const char *src, uint *out_consumed_bytes);
-long            read_ping_request(const char *src, uint *out_consumed_bytes);
-void            write_pong_response(char *dst, long timestamp, uint *out_written_bytes);
+/**
+ * reads one HandshakePacket from src into dst and returns amount of bytes read
+ */
+uint read_handshake_packet(HandshakePacket *dst, const char *src);
+
+/**
+ * reads one ping request from src into dst and returns amount of bytes read
+ *
+ * the whole ping request is just one long (timestamp)
+ */
+uint read_ping_request(long *dst, const char *src);
+
+/**
+ * returns the amount of bytes written
+ */
+uint write_pong_response(char *dst, long timestamp);
 

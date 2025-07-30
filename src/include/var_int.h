@@ -4,6 +4,12 @@
 
 #define CONTINUATION_BIT 0b10000000
 
-int read_var_int(const char *src, uint *out_consumed_bytes);
+/**
+ * reads one VarInt from src into dst, returns the amoung of bytes read
+ */
+uint read_var_int(int *dst, const char *src);
 
-void write_var_int(char *dst, int value, uint *out_written_bytes);
+/**
+ * returns the amount of bytes written
+ */
+uint write_var_int(char *dst, int value);
