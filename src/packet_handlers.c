@@ -12,29 +12,29 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-void handle_handshake(const PlayerConnection conn,
-                      const char *const      packet_bytes,
-                      const size_t           n_bytes) {
+void handle_handshake(PlayerConnection conn, const char *const packet_bytes, const size_t n_bytes) {
     UNUSED(conn);
     UNUSED(n_bytes);
 
     uint            tmp;
     HandshakePacket packet = read_handshake_packet(packet_bytes, &tmp);
 
-    printf(
-        "Got handshake: protocol = %d\n"
-        "               server_address = %s\n"
-        "               server_port = %d\n"
-        "               intent = %d\n",
-        packet.protocol_version,
-        packet.server_address,
-        packet.server_port,
-        packet.intent);
+    switch (packet.intent) {
+    case STATUS_INTENT:
+        conn.stage = STATUS;
+        break;
+    case LOGIN_INTENT:
+        conn.stage = LOGIN;
+        break;
+    case TRANSFER_INTENT:
+        fprintf(stderr, "Transfer not implemented\n");
+        exit(1);
+    default:
+        fprintf(stderr, "invalid handshake intent: %d\n", packet.intent);
+        exit(1);
+    }
 
     free_HandshakePacket(packet);
-
-    close(conn.socket);
-    exit(0);
 }
 
 void handle_status_request(const PlayerConnection conn,
@@ -62,9 +62,19 @@ void handle_status_request(const PlayerConnection conn,
 void handle_ping_request(const PlayerConnection conn,
                          const char *const      packet_bytes,
                          const size_t           n_bytes) {
-    UNUSED(conn);
-    UNUSED(packet_bytes);
     UNUSED(n_bytes);
-    // TODO: handle_ping_request
+
+    uint length;
+
+    long timestamp = read_ping_request(packet_bytes, &length);
+
+    // VarInt + long
+    char buffer[5 + sizeof(long)];
+    write_var_int(buffer, PONG_RESPONSE, &length);
+    *(long *)(buffer + length) = timestamp;
+    length += sizeof(long);
+
+    send_var_int(conn.socket, length);
+    send(conn.socket, buffer, length, 0);
 }
 
