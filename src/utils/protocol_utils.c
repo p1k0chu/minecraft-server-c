@@ -18,9 +18,8 @@ uint32_t read_prefixed_bytes(char **const dst, const char *src) {
     int      length;
     uint32_t bytes_read = read_var_int(&length, src);
 
-    char *buffer = malloc(length);
-    memcpy(buffer, src + bytes_read, length);
-    *dst = buffer;
+    *dst = malloc(length);
+    memcpy(*dst, src + bytes_read, length);
 
     return bytes_read + length;
 }
