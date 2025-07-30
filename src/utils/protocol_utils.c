@@ -14,6 +14,7 @@ void write_prefixed_bytes(char *const       dst,
     write_var_int(dst, n, out_written_bytes);
 
     memcpy(dst + *out_written_bytes, src, n);
+    *out_written_bytes += n;
 }
 
 void send_var_int(int sockfd, int value) {
