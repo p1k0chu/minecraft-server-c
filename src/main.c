@@ -1,6 +1,12 @@
+#include "packet_handlers.h"
+#include "packet_ids.h"
+#include "server.h"
+#include "utils/protocol_utils.h"
 #include "utils/utils.h"
+#include "var_int.h"
 
 #include <netinet/in.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -38,11 +44,55 @@ int main() {
             continue;
         }
 
-        const char message[] = ":3\n";
-        send(socket, message, sizeof(message), 0);
+        PlayerConnection conn = {.stage = HANDSHAKING, .socket = socket};
+        int              packet_id;
+        int              packet_length;
+        char            *buffer        = NULL;
+        int              buffer_length = 0;
+        uint             buffer_index  = 0;
 
-        close(socket);
-        exit(0);
+#define BUFFER_READER (buffer + buffer_index)
+#define BUFFER_LENGTH (buffer_length - buffer_index)
+
+        while (1) {
+            packet_length = recv_var_int(socket);
+
+            if (buffer_length < packet_length || buffer == NULL) {
+                if (buffer != NULL) free(buffer);
+
+                buffer_length = packet_length;
+                buffer        = malloc(buffer_length);
+
+                if (buffer == NULL) error("Error allocating buffer for a packet");
+            }
+
+            recv(socket, buffer, packet_length, 0);
+
+            packet_id = read_var_int(buffer, &buffer_index);
+
+            switch (conn.stage) {
+            case HANDSHAKING:
+                switch ((C2SHandshakingPacket)packet_id) {
+                case HANDSHAKE:
+                    handle_handshake(conn, BUFFER_READER, BUFFER_LENGTH);
+                    break;
+                }
+                break;
+            case STATUS:
+            case LOGIN:
+            case CONFIGURATION:
+            case PLAY:
+                fprintf(stderr, "Protocol stage %d is not implemented!\n", conn.stage);
+                close(socket);
+                exit(1);
+            }
+
+#undef BUFFER_READER
+#undef BUFFER_LENGTH
+        }
+
+        // close(socket);
+        // exit(0);
     }
 
     return 0;

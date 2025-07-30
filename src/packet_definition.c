@@ -1,10 +1,12 @@
 #include "packet_definition.h"
 
 #include "utils/protocol_utils.h"
+#include "var_int.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 
 #define WRITE_CONST_STRING(string, dst)  \
     {                                    \
@@ -42,6 +44,42 @@ void write_status_response(char *const          dst,
 
     write_prefixed_bytes(dst, buffer, strlen(buffer), out_written_bytes);
     free(buffer);
+}
+
+HandshakePacket read_handshake_packet(const char *const src, uint *const out_consumed_bytes) {
+    uint tmp;
+
+    int    protocol;
+    char  *server_address;
+    ushort server_port;
+    int    intent;
+
+    protocol = read_var_int(src, out_consumed_bytes);
+
+    {
+        int len = read_var_int(src + *out_consumed_bytes, &tmp);
+        *out_consumed_bytes += tmp;
+
+        server_address = calloc(len + 1, sizeof(char));
+        memcpy(server_address, src + *out_consumed_bytes, len);
+        *out_consumed_bytes += len;
+    }
+
+    server_port = *(const ushort *)(src + *out_consumed_bytes);
+    *out_consumed_bytes += sizeof(short);
+
+    intent = read_var_int(src + *out_consumed_bytes, &tmp);
+    *out_consumed_bytes += tmp;
+
+    HandshakePacket packet = {.protocol_version = protocol,
+                              .server_address   = server_address,
+                              .server_port      = server_port,
+                              .intent           = intent};
+    return packet;
+}
+
+void free_HandshakePacket(HandshakePacket packet) {
+    free(packet.server_address);
 }
 
 long read_ping_request(const char *const src, uint *const out_consumed_bytes) {

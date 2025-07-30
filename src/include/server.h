@@ -4,6 +4,6 @@
 
 typedef struct PlayerConnection {
     ProtocolStage stage;
-    const int socket;
+    const int     socket;
 } PlayerConnection;
 

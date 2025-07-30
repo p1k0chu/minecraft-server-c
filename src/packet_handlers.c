@@ -7,7 +7,35 @@
 #include "utils/utils.h"
 #include "var_int.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/socket.h>
+#include <unistd.h>
+
+void handle_handshake(const PlayerConnection conn,
+                      const char *const      packet_bytes,
+                      const size_t           n_bytes) {
+    UNUSED(conn);
+    UNUSED(n_bytes);
+
+    uint            tmp;
+    HandshakePacket packet = read_handshake_packet(packet_bytes, &tmp);
+
+    printf(
+        "Got handshake: protocol = %d\n"
+        "               server_address = %s\n"
+        "               server_port = %d\n"
+        "               intent = %d\n",
+        packet.protocol_version,
+        packet.server_address,
+        packet.server_port,
+        packet.intent);
+
+    free_HandshakePacket(packet);
+
+    close(conn.socket);
+    exit(0);
+}
 
 void handle_status_request(const PlayerConnection conn,
                            const char *const      packet_bytes,
