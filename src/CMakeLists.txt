@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.31)
 project("minecraft-server-c" LANGUAGES C)
 
-set(CMAKE_C_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c23 -Wall -Wextra -Werror")
 
 include_directories(include)
 

@@ -22,10 +22,10 @@
         (dst) += len;                  \
     }
 
-uint write_status_response(char *dst, StatusResponse value) {
-    uint  length = 0;
-    char *buffer = calloc(1000, sizeof(char));
-    char *writer = buffer;
+uint32_t write_status_response(char *dst, StatusResponse value) {
+    uint32_t length = 0;
+    char    *buffer = calloc(1000, sizeof(char));
+    char    *writer = buffer;
 
     WRITE_CONST_STRING("{\"version\":{\"name\":\"", writer);
     WRITE_STRING(value.version_name, writer);
@@ -47,18 +47,18 @@ uint write_status_response(char *dst, StatusResponse value) {
     return length;
 }
 
-uint read_handshake_packet(HandshakePacket *const dst, const char *const src) {
-    uint length;
+uint32_t read_handshake_packet(HandshakePacket *const dst, const char *const src) {
+    uint32_t length;
 
-    int    protocol;
-    char  *server_address;
-    ushort server_port;
-    int    intent;
+    int      protocol;
+    char    *server_address;
+    uint16_t server_port;
+    int      intent;
 
     length = read_var_int(&protocol, src);
     length += read_prefixed_bytes(&server_address, src + length);
 
-    server_port = *(const ushort *)(src + length);
+    server_port = *(const uint16_t *)(src + length);
     length += sizeof(short);
 
     length += read_var_int(&intent, src + length);
@@ -75,12 +75,12 @@ void free_HandshakePacket(HandshakePacket packet) {
     free(packet.server_address);
 }
 
-uint read_ping_request(long *dst, const char *src) {
+uint32_t read_ping_request(long *dst, const char *src) {
     *dst = *((const long *)src);
     return sizeof(long);
 }
 
-uint write_pong_response(char *dst, long timestamp) {
+uint32_t write_pong_response(char *dst, long timestamp) {
     *((long *const)dst) = timestamp;
     return sizeof(long);
 }
