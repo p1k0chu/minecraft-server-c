@@ -2,13 +2,17 @@
 
 #include "packet_definition.h"
 #include "packet_ids.h"
+#include "server.h"
 #include "utils/protocol_utils.h"
 #include "utils/utils.h"
 #include "var_int.h"
 
 #include <sys/socket.h>
 
-void handle_status_request(int sockfd, const char *packet_bytes, size_t n_bytes) {
+void handle_status_request(const PlayerConnection conn,
+                           const char *const      packet_bytes,
+                           const size_t           n_bytes) {
+    UNUSED(conn);
     UNUSED(packet_bytes);
     UNUSED(n_bytes);
 
@@ -23,12 +27,14 @@ void handle_status_request(int sockfd, const char *packet_bytes, size_t n_bytes)
     write_status_response(buffer + length, resp, &tmp);
     length += tmp;
 
-    send_var_int(sockfd, length);
-    send(sockfd, buffer, length, 0);
+    send_var_int(conn.socket, length);
+    send(conn.socket, buffer, length, 0);
 }
 
-void handle_ping_request(int sockfd, const char *packet_bytes, size_t n_bytes) {
-    UNUSED(sockfd);
+void handle_ping_request(const PlayerConnection conn,
+                         const char *const      packet_bytes,
+                         const size_t           n_bytes) {
+    UNUSED(conn);
     UNUSED(packet_bytes);
     UNUSED(n_bytes);
     // TODO: handle_ping_request
