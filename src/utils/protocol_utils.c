@@ -1,6 +1,7 @@
 #include "utils/protocol_utils.h"
 
 #include "var_int.h"
+
 #include <string.h>
 
 void write_prefixed_bytes(char *const       dst,

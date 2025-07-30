@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 int read_var_int(const char *const src, uint *const out_consumed_bytes) {
-#define index    (*out_consumed_bytes)
+#define index (*out_consumed_bytes)
 
     int  result = 0;
     char byte;
@@ -28,7 +28,7 @@ int read_var_int(const char *const src, uint *const out_consumed_bytes) {
 }
 
 void write_var_int(char *const dst, int value, uint *const out_written_bytes) {
-#define index    (*out_written_bytes)
+#define index (*out_written_bytes)
 
     index = 0;
     while ((value & CONTINUATION_BIT) != 0) {
