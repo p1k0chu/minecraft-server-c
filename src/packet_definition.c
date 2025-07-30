@@ -20,7 +20,9 @@
         (dst) += len;                      \
     }
 
-void write_status_response(char *const dst, const StatusResponse value, uint *const out_written_bytes) {
+void write_status_response(char *const          dst,
+                           const StatusResponse value,
+                           uint *const          out_written_bytes) {
     char *buffer = calloc(1000, sizeof(char));
     char *writer = buffer;
 
@@ -44,11 +46,10 @@ void write_status_response(char *const dst, const StatusResponse value, uint *co
 
 long read_ping_request(const char *const src, uint *const out_consumed_bytes) {
     *out_consumed_bytes = sizeof(long);
-    return *((const long*)src);
+    return *((const long *)src);
 }
 
 void write_pong_response(char *const dst, const long timestamp, uint *const out_written_bytes) {
-    *out_written_bytes = sizeof(long);
-    *((long *const) dst) = timestamp;
+    *out_written_bytes  = sizeof(long);
+    *((long *const)dst) = timestamp;
 }
-
