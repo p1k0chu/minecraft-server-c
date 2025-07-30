@@ -74,17 +74,17 @@ int main() {
             case HANDSHAKING:
                 switch ((C2SHandshakingPacket)packet_id) {
                 case HANDSHAKE:
-                    handle_handshake(conn, BUFFER_READER, BUFFER_LENGTH);
+                    handle_handshake(&conn, BUFFER_READER, BUFFER_LENGTH);
                     break;
                 }
                 break;
             case STATUS:
                 switch ((C2SStatusPacket)packet_id) {
                 case STATUS_REQUEST:
-                    handle_status_request(conn, BUFFER_READER, BUFFER_LENGTH);
+                    handle_status_request(&conn, BUFFER_READER, BUFFER_LENGTH);
                     break;
                 case PING_REQUEST:
-                    handle_ping_request(conn, BUFFER_READER, BUFFER_LENGTH);
+                    handle_ping_request(&conn, BUFFER_READER, BUFFER_LENGTH);
                     break;
                 }
                 break;

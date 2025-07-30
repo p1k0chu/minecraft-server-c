@@ -12,7 +12,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-void handle_handshake(PlayerConnection conn, const char *const packet_bytes, const size_t n_bytes) {
+void handle_handshake(PlayerConnection *const conn,
+                      const char *const       packet_bytes,
+                      const size_t            n_bytes) {
     UNUSED(conn);
     UNUSED(n_bytes);
 
@@ -21,10 +23,10 @@ void handle_handshake(PlayerConnection conn, const char *const packet_bytes, con
 
     switch (packet.intent) {
     case STATUS_INTENT:
-        conn.stage = STATUS;
+        conn->stage = STATUS;
         break;
     case LOGIN_INTENT:
-        conn.stage = LOGIN;
+        conn->stage = LOGIN;
         break;
     case TRANSFER_INTENT:
         fprintf(stderr, "Transfer not implemented\n");
@@ -37,9 +39,9 @@ void handle_handshake(PlayerConnection conn, const char *const packet_bytes, con
     free_HandshakePacket(packet);
 }
 
-void handle_status_request(const PlayerConnection conn,
-                           const char *const      packet_bytes,
-                           const size_t           n_bytes) {
+void handle_status_request(PlayerConnection *const conn,
+                           const char *const       packet_bytes,
+                           const size_t            n_bytes) {
     UNUSED(packet_bytes);
     UNUSED(n_bytes);
 
@@ -54,13 +56,13 @@ void handle_status_request(const PlayerConnection conn,
     write_status_response(buffer + length, resp, &tmp);
     length += tmp;
 
-    send_var_int(conn.socket, length);
-    send(conn.socket, buffer, length, 0);
+    send_var_int(conn->socket, length);
+    send(conn->socket, buffer, length, 0);
 }
 
-void handle_ping_request(const PlayerConnection conn,
-                         const char *const      packet_bytes,
-                         const size_t           n_bytes) {
+void handle_ping_request(PlayerConnection *const conn,
+                         const char *const       packet_bytes,
+                         const size_t            n_bytes) {
     UNUSED(n_bytes);
 
     uint length;
@@ -73,7 +75,7 @@ void handle_ping_request(const PlayerConnection conn,
     *(long *)(buffer + length) = timestamp;
     length += sizeof(long);
 
-    send_var_int(conn.socket, length);
-    send(conn.socket, buffer, length, 0);
+    send_var_int(conn->socket, length);
+    send(conn->socket, buffer, length, 0);
 }
 
