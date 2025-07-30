@@ -9,19 +9,19 @@ typedef enum HandshakeIntent {
 } HandshakeIntent;
 
 typedef struct HandshakePacket {
-    const int             protocol_version;
-    char *const           server_address;
-    const unsigned short  server_port;
-    const HandshakeIntent intent;
+    int             protocol_version;
+    char           *server_address;
+    unsigned short  server_port;
+    HandshakeIntent intent;
 } HandshakePacket;
 
 void free_HandshakePacket(HandshakePacket packet);
 
 typedef struct StatusResponse {
-    const char *const version_name;
-    const int         version_protocol;
-    const uint        max_players;
-    const char *const motd;
+    const char *version_name;
+    int         version_protocol;
+    uint        max_players;
+    const char *motd;
 } StatusResponse;
 
 void write_status_response(char *dst, StatusResponse value, uint *out_written_bytes);
