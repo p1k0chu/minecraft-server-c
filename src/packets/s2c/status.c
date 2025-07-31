@@ -23,8 +23,8 @@
     }
 
 uint32_t write_status_response(char *const dst, const StatusResponse value) {
-    char    *buffer = calloc(1000, sizeof(char));
-    char    *writer = buffer;
+    char *buffer = calloc(1000, sizeof(char));
+    char *writer = buffer;
 
     WRITE_CONST_STRING("{\"version\":{\"name\":\"", writer);
     WRITE_STRING(value.version_name, writer);
