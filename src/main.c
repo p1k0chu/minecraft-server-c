@@ -74,21 +74,10 @@ int main() {
 
             switch (conn.stage) {
             case HANDSHAKING:
-                switch ((C2SHandshakingPacket)packet_id) {
-                case HANDSHAKE:
-                    handle_handshake(&conn, BUFFER_READER, BUFFER_LENGTH);
-                    break;
-                }
+                handle_handshaking_packet(&conn, BUFFER_READER, BUFFER_LENGTH, packet_id);
                 break;
             case STATUS:
-                switch ((C2SStatusPacket)packet_id) {
-                case STATUS_REQUEST:
-                    handle_status_request(&conn, BUFFER_READER, BUFFER_LENGTH);
-                    break;
-                case PING_REQUEST:
-                    handle_ping_request(&conn, BUFFER_READER, BUFFER_LENGTH);
-                    break;
-                }
+                handle_status_packet(&conn, BUFFER_READER, BUFFER_LENGTH, packet_id);
                 break;
             case LOGIN:
             case CONFIGURATION:

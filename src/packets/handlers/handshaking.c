@@ -5,8 +5,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void handle_handshake(PlayerConnection *const conn, const char *const packet_bytes, const size_t) {
+void handle_handshaking_packet(PlayerConnection *const    conn,
+                               const char *const          packet_bytes,
+                               const size_t               n_bytes,
+                               const C2SHandshakingPacket id) {
+    switch (id) {
+    case HANDSHAKE:
+        handle_handshake(conn, packet_bytes, n_bytes);
+        break;
+    }
+}
 
+void handle_handshake(PlayerConnection *const conn, const char *const packet_bytes, const size_t) {
     HandshakePacket packet;
     read_handshake_packet(&packet, packet_bytes);
 

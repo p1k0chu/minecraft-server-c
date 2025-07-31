@@ -9,6 +9,20 @@
 #include <stdint.h>
 #include <sys/socket.h>
 
+void handle_status_packet(PlayerConnection *const conn,
+                          const char *const       packet_bytes,
+                          const size_t            n_bytes,
+                          const C2SStatusPacket   id) {
+    switch (id) {
+    case STATUS_REQUEST:
+        handle_status_request(conn, packet_bytes, n_bytes);
+        break;
+    case PING_REQUEST:
+        handle_ping_request(conn, packet_bytes, n_bytes);
+        break;
+    }
+}
+
 void handle_status_request(PlayerConnection *const conn, const char *const, const size_t) {
     StatusResponse resp = {.version_name     = "1.21.8",
                            .version_protocol = 772,
