@@ -29,9 +29,7 @@ void handle_status_request(PlayerConnection *const conn, const char *const, cons
                            .max_players      = 20,
                            .motd             = "Hello from c!"};
     char           buffer[6969];
-    uint32_t       length;
-    length = write_var_int(buffer, STATUS_RESPONSE);
-    length += write_status_response(buffer + length, resp);
+    const uint32_t length = write_status_response(buffer, resp);
 
     send_var_int(conn->socket, length);
     send(conn->socket, buffer, length, 0);
@@ -47,9 +45,7 @@ void handle_ping_request(PlayerConnection *const conn,
 
     // VarInt + long
     char buffer[5 + sizeof(long)];
-    length                     = write_var_int(buffer, PONG_RESPONSE);
-    *(long *)(buffer + length) = timestamp;
-    length += sizeof(long);
+    length = write_pong_response(buffer, timestamp);
 
     send_var_int(conn->socket, length);
     send(conn->socket, buffer, length, 0);

@@ -1,7 +1,9 @@
 #include "packets/s2c/status.h"
 
 #include "utils/protocol_utils.h"
+#include "var_int.h"
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,15 +15,14 @@
         dst += sizeof(str) - 1;          \
     }
 
-#define WRITE_STRING(string, dst)      \
-    {                                  \
-        size_t len = strlen((string)); \
-        memcpy((dst), (string), len);  \
-        (dst) += len;                  \
+#define WRITE_STRING(string, dst)            \
+    {                                        \
+        const size_t len = strlen((string)); \
+        memcpy((dst), (string), len);        \
+        (dst) += len;                        \
     }
 
-uint32_t write_status_response(char *dst, StatusResponse value) {
-    uint32_t length = 0;
+uint32_t write_status_response(char *const dst, const StatusResponse value) {
     char    *buffer = calloc(1000, sizeof(char));
     char    *writer = buffer;
 
@@ -39,14 +40,16 @@ uint32_t write_status_response(char *dst, StatusResponse value) {
 
     WRITE_CONST_STRING("\"},\"enforcesSecureChat\":false}", writer);
 
-    length = write_prefixed_bytes(dst, buffer, writer - buffer);
+    uint32_t length = write_var_int(dst, STATUS_RESPONSE);
+    length += write_prefixed_bytes(dst + length, buffer, writer - buffer);
     free(buffer);
 
     return length;
 }
 
-uint32_t write_pong_response(char *dst, long timestamp) {
-    *((long *const)dst) = timestamp;
-    return sizeof(long);
+uint32_t write_pong_response(char *const dst, const long timestamp) {
+    uint32_t length              = write_var_int(dst, PONG_RESPONSE);
+    *(long *const)(dst + length) = timestamp;
+    return length + sizeof(long);
 }
 
