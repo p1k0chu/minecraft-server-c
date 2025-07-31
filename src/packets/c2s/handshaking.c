@@ -15,7 +15,7 @@ uint32_t read_handshake_packet(HandshakePacket *const dst, const char *const src
     int      intent;
 
     length = read_var_int(&protocol, src);
-    length += read_prefixed_bytes(&server_address, src + length);
+    length += read_prefixed_string(&server_address, src + length);
 
     server_port = *(const uint16_t *)(src + length);
     length += sizeof(short);

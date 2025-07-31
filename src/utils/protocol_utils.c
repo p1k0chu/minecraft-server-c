@@ -24,6 +24,17 @@ uint32_t read_prefixed_bytes(char **const dst, const char *src) {
     return bytes_read + length;
 }
 
+uint32_t read_prefixed_string(char **const dst, const char *const src) {
+    int      length;
+    uint32_t bytes_read = read_var_int(&length, src);
+
+    *dst = malloc(length + 1);
+    memcpy(*dst, src + bytes_read, length);
+    *dst[length] = 0;
+
+    return bytes_read + length;
+}
+
 void send_var_int(int sockfd, int value) {
     char     buffer[5];
     uint32_t length = write_var_int(buffer, value);
