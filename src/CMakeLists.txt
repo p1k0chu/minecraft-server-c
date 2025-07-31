@@ -7,8 +7,11 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c23 -Wall -Wextra -Werror")
 include_directories(include)
 
 add_executable(main main.c
-                    utils/utils.c
                     var_int.c
+                    utils/utils.c
                     utils/protocol_utils.c
-                    packet_handlers.c
-                    packet_definition.c)
+                    packets/c2s/handshaking.c
+                    packets/c2s/status.c
+                    packets/handlers/handshaking.c
+                    packets/handlers/status.c
+                    packets/s2c/status.c)

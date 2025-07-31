@@ -1,38 +1,13 @@
-#include "packet_handlers.h"
+#include "packets/handlers/status.h"
 
-#include "packet_definition.h"
-#include "packet_ids.h"
-#include "server.h"
+#include "packets/c2s/status.h"
+#include "packets/s2c/status.h"
 #include "utils/protocol_utils.h"
 #include "var_int.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <sys/socket.h>
-#include <unistd.h>
-
-void handle_handshake(PlayerConnection *const conn, const char *const packet_bytes, const size_t) {
-
-    HandshakePacket packet;
-    read_handshake_packet(&packet, packet_bytes);
-
-    switch (packet.intent) {
-    case STATUS_INTENT:
-        conn->stage = STATUS;
-        break;
-    case LOGIN_INTENT:
-        conn->stage = LOGIN;
-        break;
-    case TRANSFER_INTENT:
-        fprintf(stderr, "Transfer not implemented\n");
-        exit(1);
-    default:
-        fprintf(stderr, "invalid handshake intent: %d\n", packet.intent);
-        exit(1);
-    }
-
-    free_HandshakePacket(packet);
-}
 
 void handle_status_request(PlayerConnection *const conn, const char *const, const size_t) {
     StatusResponse resp = {.version_name     = "1.21.8",
@@ -65,4 +40,3 @@ void handle_ping_request(PlayerConnection *const conn,
     send_var_int(conn->socket, length);
     send(conn->socket, buffer, length, 0);
 }
-

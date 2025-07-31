@@ -1,12 +1,10 @@
-#include "packet_definition.h"
+#include "packets/s2c/status.h"
 
 #include "utils/protocol_utils.h"
-#include "var_int.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
 
 #define WRITE_CONST_STRING(string, dst)  \
     {                                    \
@@ -47,40 +45,8 @@ uint32_t write_status_response(char *dst, StatusResponse value) {
     return length;
 }
 
-uint32_t read_handshake_packet(HandshakePacket *const dst, const char *const src) {
-    uint32_t length;
-
-    int      protocol;
-    char    *server_address;
-    uint16_t server_port;
-    int      intent;
-
-    length = read_var_int(&protocol, src);
-    length += read_prefixed_bytes(&server_address, src + length);
-
-    server_port = *(const uint16_t *)(src + length);
-    length += sizeof(short);
-
-    length += read_var_int(&intent, src + length);
-
-    *dst = (HandshakePacket){.protocol_version = protocol,
-                             .server_address   = server_address,
-                             .server_port      = server_port,
-                             .intent           = intent};
-
-    return length;
-}
-
-void free_HandshakePacket(HandshakePacket packet) {
-    free(packet.server_address);
-}
-
-uint32_t read_ping_request(long *dst, const char *src) {
-    *dst = *((const long *)src);
-    return sizeof(long);
-}
-
 uint32_t write_pong_response(char *dst, long timestamp) {
     *((long *const)dst) = timestamp;
     return sizeof(long);
 }
+

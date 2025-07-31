@@ -1,6 +1,6 @@
 #pragma once
 
-#include "packet_ids.h"
+#include "packets/protocol_stage.h"
 
 typedef struct PlayerConnection {
     ProtocolStage stage;
