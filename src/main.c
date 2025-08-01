@@ -1,7 +1,7 @@
+#include "buffer.h"
 #include "packets/handlers/handshaking.h"
 #include "packets/handlers/status.h"
 #include "server.h"
-#include "utils/protocol_utils.h"
 #include "utils/utils.h"
 #include "var_int.h"
 
@@ -12,6 +12,19 @@
 #include <unistd.h>
 
 #define PORT 25565
+
+static inline bool handle_recv_error(long result) {
+    if (result == 0) {
+        fprintf(stderr, "socket was closed :<\n");
+        return false;
+    }
+
+    if (result < 0) {
+        error("error reading from socket\n");
+    }
+
+    return true;
+}
 
 int main() {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -49,33 +62,33 @@ int main() {
         int              packet_length;
         char            *buffer        = NULL;
         int              buffer_length = 0;
-        uint32_t         buffer_index  = 0;
-
-#define BUFFER_READER (buffer + buffer_index)
-#define BUFFER_LENGTH (buffer_length - buffer_index)
 
         while (1) {
-            packet_length = recv_var_int(socket);
+            if (!(handle_recv_error(recv_var_int(&packet_length, socket)))) {
+                break;
+            }
 
             if (buffer_length < packet_length || buffer == NULL) {
-                if (buffer != NULL) free(buffer);
-
                 buffer_length = packet_length;
-                buffer        = malloc(buffer_length);
+                buffer        = realloc(buffer, buffer_length);
 
                 if (buffer == NULL) error("Error allocating buffer for a packet");
             }
 
-            recv(socket, buffer, packet_length, 0);
+            if (!(handle_recv_error(recv(socket, buffer, packet_length, 0)))) {
+                break;
+            }
 
-            buffer_index = read_var_int(&packet_id, buffer);
+            BufferReader reader = {.ptr = buffer, .remaining = packet_length};
+
+            read_var_int(&packet_id, &reader);
 
             switch (conn.stage) {
             case HANDSHAKING:
-                handle_handshaking_packet(&conn, BUFFER_READER, BUFFER_LENGTH, packet_id);
+                handle_handshaking_packet(&conn, &reader, packet_id);
                 break;
             case STATUS:
-                handle_status_packet(&conn, BUFFER_READER, BUFFER_LENGTH, packet_id);
+                handle_status_packet(&conn, &reader, packet_id);
                 break;
             case LOGIN:
             case CONFIGURATION:
@@ -84,13 +97,7 @@ int main() {
                 close(socket);
                 exit(1);
             }
-
-#undef BUFFER_READER
-#undef BUFFER_LENGTH
         }
-
-        // close(socket);
-        // exit(0);
     }
 
     return 0;
