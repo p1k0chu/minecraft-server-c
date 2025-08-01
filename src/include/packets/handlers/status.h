@@ -1,3 +1,5 @@
+#pragma once
+
 #include "buffer.h"
 #include "packets/c2s/status.h"
 #include "server.h"
