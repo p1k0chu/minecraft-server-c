@@ -45,30 +45,34 @@ bool write_var_int(BufferWriter *const dst, int value) {
     return true;
 }
 
-void send_var_int(int sockfd, int value) {
+int send_var_int(int sockfd, int value) {
     BufferWriter writer = new_buffer_writer(5);
 
     if (write_var_int(&writer, value)) {
-        send(sockfd, writer.start, writer.ptr - writer.start, 0);
+        return send(sockfd, writer.start, writer.ptr - writer.start, 0);
     }
+
+    return -2;
 }
 
-int recv_var_int(int sockfd) {
-    int     result = 0;
-    uint8_t shift  = 0;
+int recv_var_int(int *dst, int sockfd) {
+    *dst          = 0;
+    uint8_t index = 0;
     char    byte;
+    long status;
 
     do {
-        recv(sockfd, &byte, 1, 0);
-        result = result | ((byte & 127) << shift);
-        shift += 7;
+        status = recv(sockfd, &byte, 1, 0);
+        if (status <= 0) return status;
 
-        if (shift > 35) {
+        *dst = *dst | ((byte & 127) << (index++) * 7);
+
+        if (index > 5) {
             fprintf(stderr, "VarInt is too long");
             exit(1);
         }
     } while ((byte & CONTINUATION_BIT) != 0);
 
-    return result;
+    return index;
 }
 
