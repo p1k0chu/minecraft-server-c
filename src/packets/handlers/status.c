@@ -3,14 +3,15 @@
 #include "buffer.h"
 #include "packets/c2s/status.h"
 #include "packets/s2c/status.h"
-#include "var_int.h"
 
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 
-void handle_status_packet(PlayerConnection *conn, BufferReader *packet_reader, C2SStatusPacket id) {
+void handle_status_packet(PlayerConnection *const conn,
+                          BufferReader *const     packet_reader,
+                          const C2SStatusPacket   id) {
     switch (id) {
     case STATUS_REQUEST:
         handle_status_request(conn, packet_reader);
@@ -21,7 +22,7 @@ void handle_status_packet(PlayerConnection *conn, BufferReader *packet_reader, C
     }
 }
 
-void handle_status_request(PlayerConnection *conn, BufferReader *) {
+void handle_status_request(PlayerConnection *const conn, BufferReader *const) {
     const StatusResponse resp   = {.version_name     = "1.21.8",
                                    .version_protocol = 772,
                                    .max_players      = 20,
@@ -34,7 +35,7 @@ void handle_status_request(PlayerConnection *conn, BufferReader *) {
     free(writer.start);
 }
 
-void handle_ping_request(PlayerConnection *conn, BufferReader *packet_reader) {
+void handle_ping_request(PlayerConnection *const conn, BufferReader *const packet_reader) {
     long timestamp;
     if (!read_ping_request(&timestamp, packet_reader)) return;
 

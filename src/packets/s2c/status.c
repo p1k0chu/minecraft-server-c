@@ -41,7 +41,7 @@
         (buffer).ptr += len;                                   \
     }
 
-bool write_status_response(BufferWriter *dst, const StatusResponse *value) {
+bool write_status_response(BufferWriter *const dst, const StatusResponse *const value) {
     if (!write_var_int(dst, STATUS_RESPONSE)) return false;
 
     BufferWriter buffer = new_buffer_writer(BUFFER_REALLOC_EXTRA_BYTES);
@@ -72,7 +72,7 @@ bool write_status_response(BufferWriter *dst, const StatusResponse *value) {
     return true;
 }
 
-bool write_pong_response(BufferWriter *dst, long timestamp) {
+bool write_pong_response(BufferWriter *const dst, const long timestamp) {
     if (!write_var_int(dst, PONG_RESPONSE)) return false;
 
     *(long *)(dst->ptr) = timestamp;
