@@ -20,7 +20,7 @@ static inline bool handle_recv_error(long result) {
     }
 
     if (result < 0) {
-        error("error reading from socket\n");
+        ERROR("error reading from socket");
     }
 
     return true;
@@ -37,22 +37,22 @@ int main() {
     server_addr.sin_port        = htons(PORT);
 
     if (bind(sockfd, (struct sockaddr *)&server_addr, sock_length) < 0) {
-        error("error on binding");
+        ERROR("error on binding");
     }
 
     if (listen(sockfd, 5) == -1) {
-        error("error on listening");
+        ERROR("error on listening");
     };
 
     while (1) {
         int socket = accept(sockfd, (struct sockaddr *)&server_addr, &sock_length);
         if (socket < 0) {
-            error("error while accepting");
+            ERROR("error while accepting");
         }
 
         int pid = fork();
         if (pid == -1) {
-            error("error forking");
+            ERROR("error forking");
         } else if (pid != 0) { // old proccess
             continue;
         }
@@ -72,7 +72,7 @@ int main() {
                 buffer_length = packet_length;
                 buffer        = realloc(buffer, buffer_length);
 
-                if (buffer == NULL) error("Error allocating buffer for a packet");
+                if (buffer == NULL) ERROR("Error allocating buffer for a packet");
             }
 
             if (!(handle_recv_error(recv(socket, buffer, packet_length, 0)))) {
