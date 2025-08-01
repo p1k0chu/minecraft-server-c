@@ -21,6 +21,10 @@ typedef struct BufferWriter {
 
 BufferWriter new_buffer_writer(size_t initial_capacity);
 
+/// sends written bytes in BufferWriter
+/// returns the bytes sent or -1 (error in errno)
+int send_buffer_writer(int socket, const BufferWriter *src);
+
 /// realloc's the buffer and modifies the struct (on success).
 /// returns the success bool.
 bool buffer_writer_ensure_can_write(BufferWriter *this, size_t n);

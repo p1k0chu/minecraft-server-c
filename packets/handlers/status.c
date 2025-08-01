@@ -28,10 +28,7 @@ void handle_status_request(PlayerConnection *conn, BufferReader *) {
                                    .motd             = "Hello from c!"};
     BufferWriter         writer = new_buffer_writer(0);
     if (write_status_response(&writer, &resp)) {
-        const uint32_t length = writer.ptr - writer.start;
-
-        send_var_int(conn->socket, length);
-        send(conn->socket, writer.start, length, 0);
+        send_buffer_writer(conn->socket, &writer);
     }
 
     free(writer.start);
@@ -43,9 +40,7 @@ void handle_ping_request(PlayerConnection *conn, BufferReader *packet_reader) {
 
     BufferWriter writer = new_buffer_writer(sizeof(long) + 5);
     if (write_pong_response(&writer, timestamp)) {
-        const uint32_t length = writer.ptr - writer.start;
-        send_var_int(conn->socket, length);
-        send(conn->socket, writer.start, length, 0);
+        send_buffer_writer(conn->socket, &writer);
     }
 
     free(writer.start);
