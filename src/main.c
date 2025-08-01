@@ -1,5 +1,3 @@
-#include "packets/c2s/handshaking.h"
-#include "packets/c2s/status.h"
 #include "packets/handlers/handshaking.h"
 #include "packets/handlers/status.h"
 #include "server.h"
