@@ -59,7 +59,7 @@ int recv_var_int(int *dst, int sockfd) {
     *dst          = 0;
     uint8_t index = 0;
     char    byte;
-    long status;
+    long    status;
 
     do {
         status = recv(sockfd, &byte, 1, 0);

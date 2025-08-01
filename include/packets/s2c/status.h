@@ -1,4 +1,5 @@
 #include "buffer.h"
+
 #include <stdint.h>
 
 typedef enum S2CStatusPacket { STATUS_RESPONSE, PONG_RESPONSE } S2CStatusPacket;
