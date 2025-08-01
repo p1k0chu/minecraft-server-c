@@ -13,7 +13,7 @@ inline void buffer_reader_increment(BufferReader *const this, const size_t n) {
     this->remaining -= n;
 }
 
-BufferWriter new_buffer_writer(size_t initial_capacity) {
+BufferWriter new_buffer_writer(const size_t initial_capacity) {
     char *ptr = malloc(initial_capacity);
 
     if (ptr == NULL && initial_capacity > 0) {
@@ -23,7 +23,7 @@ BufferWriter new_buffer_writer(size_t initial_capacity) {
     return (BufferWriter){.start = ptr, .ptr = ptr, .capacity = initial_capacity};
 }
 
-bool buffer_writer_ensure_can_write(BufferWriter *this, size_t n) {
+bool buffer_writer_ensure_can_write(BufferWriter *const this, const size_t n) {
     const size_t written   = this->ptr - this->start;
     const size_t remaining = this->capacity - written;
 
@@ -41,7 +41,7 @@ bool buffer_writer_ensure_can_write(BufferWriter *this, size_t n) {
     return true;
 }
 
-bool write_prefixed_bytes(BufferWriter *dst, BufferReader *src, size_t n) {
+bool write_prefixed_bytes(BufferWriter *const dst, BufferReader *const src, const size_t n) {
     if (src->remaining < n) return false;
     if (!write_var_int(dst, n)) return false;
     if (!buffer_writer_ensure_can_write(dst, n)) return false;
@@ -54,7 +54,7 @@ bool write_prefixed_bytes(BufferWriter *dst, BufferReader *src, size_t n) {
     return true;
 }
 
-bool read_prefixed_bytes(char **out_data, size_t *out_size, BufferReader *src) {
+bool read_prefixed_bytes(char **const out_data, size_t *const out_size, BufferReader *const src) {
     int length;
     if (!read_var_int(&length, src)) return false;
     if (src->remaining < (size_t)length) return false;
@@ -73,7 +73,7 @@ bool read_prefixed_bytes(char **out_data, size_t *out_size, BufferReader *src) {
     return true;
 }
 
-bool read_prefixed_string(char **dst, BufferReader *src) {
+bool read_prefixed_string(char **const dst, BufferReader *const src) {
     int length;
     if (!read_var_int(&length, src)) return false;
     if (src->remaining < (size_t)length) return false;
