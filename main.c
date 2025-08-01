@@ -2,7 +2,7 @@
 #include "packets/handlers/handshaking.h"
 #include "packets/handlers/status.h"
 #include "server.h"
-#include "utils/utils.h"
+#include "utils.h"
 #include "var_int.h"
 
 #include <netinet/in.h>

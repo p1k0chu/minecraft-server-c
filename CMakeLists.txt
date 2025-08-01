@@ -9,7 +9,7 @@ include_directories(include)
 add_executable(main main.c
                     var_int.c
                     buffer.c
-                    utils/utils.c
+                    utils.c
                     packets/c2s/handshaking.c
                     packets/c2s/status.c
                     packets/handlers/handshaking.c
