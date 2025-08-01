@@ -54,10 +54,8 @@ int main() {
             packet_length = recv_var_int(socket);
 
             if (buffer_length < packet_length || buffer == NULL) {
-                if (buffer != NULL) free(buffer);
-
                 buffer_length = packet_length;
-                buffer        = malloc(buffer_length);
+                buffer        = realloc(buffer, buffer_length);
 
                 if (buffer == NULL) error("Error allocating buffer for a packet");
             }
