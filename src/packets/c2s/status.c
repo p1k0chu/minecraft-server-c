@@ -1,8 +1,15 @@
 #include "packets/c2s/status.h"
 
+#include "buffer.h"
+
 #include <stdint.h>
 
-uint32_t read_ping_request(long *dst, const char *src) {
-    *dst = *((const long *)src);
-    return sizeof(long);
+bool read_ping_request(long *dst, BufferReader *src) {
+    if (src->remaining < sizeof(long)) return false;
+
+    *dst = *(const long *)(src->ptr);
+    buffer_reader_increment(src, sizeof(long));
+
+    return true;
 }
+
