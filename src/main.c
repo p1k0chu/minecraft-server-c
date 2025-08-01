@@ -13,6 +13,19 @@
 
 #define PORT 25565
 
+static inline bool handle_recv_error(long result) {
+    if (result == 0) {
+        fprintf(stderr, "socket was closed :<\n");
+        return false;
+    }
+
+    if (result < 0) {
+        error("error reading from socket\n");
+    }
+
+    return true;
+}
+
 int main() {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -51,7 +64,9 @@ int main() {
         int              buffer_length = 0;
 
         while (1) {
-            packet_length = recv_var_int(socket);
+            if (!(handle_recv_error(recv_var_int(&packet_length, socket)))) {
+                break;
+            }
 
             if (buffer_length < packet_length || buffer == NULL) {
                 buffer_length = packet_length;
@@ -60,7 +75,9 @@ int main() {
                 if (buffer == NULL) error("Error allocating buffer for a packet");
             }
 
-            recv(socket, buffer, packet_length, 0);
+            if (!(handle_recv_error(recv(socket, buffer, packet_length, 0)))) {
+                break;
+            }
 
             BufferReader reader = {.ptr = buffer, .remaining = packet_length};
 
@@ -81,9 +98,6 @@ int main() {
                 exit(1);
             }
         }
-
-        // close(socket);
-        // exit(0);
     }
 
     return 0;
