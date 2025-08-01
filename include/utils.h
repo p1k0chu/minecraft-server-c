@@ -8,5 +8,14 @@
         }                                 \
     }
 
-void error(const char *msg);
+#define STR(s) #s
+#define XSTR(s) STR(s)
+
+#define COOL_PERROR(msg) perror(__FILE_NAME__ ":" XSTR(__LINE__) " " msg "\n")
+
+#define ERROR(msg)         \
+    {                      \
+        COOL_PERROR(msg); \
+        exit(1);           \
+    }
 

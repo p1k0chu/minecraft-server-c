@@ -1,6 +1,6 @@
 #include "buffer.h"
 
-#include "utils/utils.h"
+#include "utils.h"
 #include "var_int.h"
 
 #include <stdio.h>
@@ -17,7 +17,7 @@ BufferWriter new_buffer_writer(const size_t initial_capacity) {
     char *ptr = malloc(initial_capacity);
 
     if (ptr == NULL && initial_capacity > 0) {
-        error("failed to allocate a buffer");
+        ERROR("failed to allocate a buffer");
     }
 
     return (BufferWriter){.start = ptr, .ptr = ptr, .capacity = initial_capacity};
@@ -32,7 +32,7 @@ bool buffer_writer_ensure_can_write(BufferWriter *const this, const size_t n) {
     const size_t capacity = written + n + BUFFER_REALLOC_EXTRA_BYTES;
     char *const  ptr      = realloc(this->start, capacity);
 
-    if (ptr == NULL) error("error resizing buffer");
+    if (ptr == NULL) ERROR("error resizing buffer");
 
     this->ptr      = ptr + written;
     this->start    = ptr;
