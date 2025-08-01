@@ -23,6 +23,12 @@ BufferWriter new_buffer_writer(const size_t initial_capacity) {
     return (BufferWriter){.start = ptr, .ptr = ptr, .capacity = initial_capacity};
 }
 
+int send_buffer_writer(const int socket, const BufferWriter *const src) {
+    const uint32_t length = src->ptr - src->start;
+    send_var_int(socket, length);
+    return send(socket, src->start, length, 0);
+}
+
 bool buffer_writer_ensure_can_write(BufferWriter *const this, const size_t n) {
     const size_t written   = this->ptr - this->start;
     const size_t remaining = this->capacity - written;
