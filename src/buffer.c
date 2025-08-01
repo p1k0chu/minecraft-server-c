@@ -34,7 +34,7 @@ bool buffer_writer_ensure_can_write(BufferWriter *const this, const size_t n) {
 
     if (ptr == NULL) error("error resizing buffer");
 
-    this->ptr      = ptr + (this->ptr - this->start);
+    this->ptr      = ptr + written;
     this->start    = ptr;
     this->capacity = capacity;
 
