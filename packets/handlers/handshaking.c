@@ -5,9 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void handle_handshaking_packet(PlayerConnection    *conn,
-                               BufferReader        *packet,
-                               C2SHandshakingPacket id) {
+void handle_handshaking_packet(PlayerConnection *const    conn,
+                               BufferReader *const        packet,
+                               const C2SHandshakingPacket id) {
     switch (id) {
     case HANDSHAKE:
         handle_handshake(conn, packet);
@@ -15,7 +15,7 @@ void handle_handshaking_packet(PlayerConnection    *conn,
     }
 }
 
-void handle_handshake(PlayerConnection *conn, BufferReader *packet_reader) {
+void handle_handshake(PlayerConnection *const conn, BufferReader *const packet_reader) {
     HandshakePacket packet;
     if (!read_handshake_packet(&packet, packet_reader)) return;
 

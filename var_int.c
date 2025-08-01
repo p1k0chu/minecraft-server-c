@@ -55,7 +55,7 @@ int send_var_int(int sockfd, int value) {
     return -2;
 }
 
-int recv_var_int(int *dst, int sockfd) {
+int recv_var_int(int *const dst, const int sockfd) {
     *dst          = 0;
     uint8_t index = 0;
     char    byte;

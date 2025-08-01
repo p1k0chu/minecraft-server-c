@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-bool read_handshake_packet(HandshakePacket *dst, BufferReader *src) {
+bool read_handshake_packet(HandshakePacket *const dst, BufferReader *const src) {
     int      protocol;
     char    *server_address;
     uint16_t server_port;
