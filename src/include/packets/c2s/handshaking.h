@@ -1,5 +1,6 @@
 #pragma once
 
+#include "buffer.h"
 #include <stdint.h>
 
 typedef enum C2SHandshakingPacket { HANDSHAKE } C2SHandshakingPacket;
@@ -17,10 +18,8 @@ typedef struct HandshakePacket {
     HandshakeIntent intent;
 } HandshakePacket;
 
-void free_HandshakePacket(HandshakePacket packet);
+void free_handshake_packet(const HandshakePacket *packet);
 
-/**
- * reads one HandshakePacket from src into dst and returns amount of bytes read
- */
-uint32_t read_handshake_packet(HandshakePacket *dst, const char *src);
+/// reads one HandshakePacket from src into dst, and returns success
+bool read_handshake_packet(HandshakePacket *dst, BufferReader *src);
 

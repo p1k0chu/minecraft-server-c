@@ -5,20 +5,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void handle_handshaking_packet(PlayerConnection *const    conn,
-                               const char *const          packet_bytes,
-                               const size_t               n_bytes,
-                               const C2SHandshakingPacket id) {
+void handle_handshaking_packet(PlayerConnection    *conn,
+                               BufferReader        *packet,
+                               C2SHandshakingPacket id) {
     switch (id) {
     case HANDSHAKE:
-        handle_handshake(conn, packet_bytes, n_bytes);
+        handle_handshake(conn, packet);
         break;
     }
 }
 
-void handle_handshake(PlayerConnection *const conn, const char *const packet_bytes, const size_t) {
+void handle_handshake(PlayerConnection *conn, BufferReader *packet_reader) {
     HandshakePacket packet;
-    read_handshake_packet(&packet, packet_bytes);
+    if (!read_handshake_packet(&packet, packet_reader)) return;
 
     switch (packet.intent) {
     case STATUS_INTENT:
@@ -35,6 +34,6 @@ void handle_handshake(PlayerConnection *const conn, const char *const packet_byt
         exit(1);
     }
 
-    free_HandshakePacket(packet);
+    free_handshake_packet(&packet);
 }
 
