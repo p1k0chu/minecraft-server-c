@@ -1,6 +1,7 @@
 #pragma once
 
 #include "buffer.h"
+
 #include <stdint.h>
 
 typedef enum C2SHandshakingPacket { HANDSHAKE } C2SHandshakingPacket;
