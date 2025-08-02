@@ -23,3 +23,13 @@
         exit(1);          \
     }
 
+#define COPY_STR(dst, src)                  \
+    {                                       \
+        const size_t len = strlen((src));   \
+        (dst)            = malloc(len + 1); \
+        if (!(dst)) ERROR("malloc");        \
+        memcpy((dst), (src), len);          \
+        (dst)[len] = 0;                     \
+    }
+
+
