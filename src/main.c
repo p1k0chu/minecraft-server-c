@@ -53,7 +53,7 @@ int main() {
         int pid = fork();
         if (pid == -1) {
             ERROR("error forking");
-        } else if (pid != 0) { // old proccess
+        } else if (pid != 0) { // old process
             continue;
         }
 
