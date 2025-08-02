@@ -2,6 +2,9 @@
 
 #include <openssl/err.h>
 
+#define RSA_KEY_BYTES 256
+#define RSA_KEY_BITS  2048
+
 EVP_PKEY *gen_rsa_key();
 
 /// out_data is a newly allocated array of out_size size

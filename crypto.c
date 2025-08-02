@@ -19,7 +19,7 @@ EVP_PKEY *gen_rsa_key() {
     if (ctx == NULL) HANDLE_ERROR(ctx, NULL);
 
     if (EVP_PKEY_keygen_init(ctx) <= 0) HANDLE_ERROR(ctx, NULL);
-    if (EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, 2048) <= 0) HANDLE_ERROR(ctx, NULL);
+    if (EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, RSA_KEY_BITS) <= 0) HANDLE_ERROR(ctx, NULL);
     if (EVP_PKEY_keygen(ctx, &pkey) <= 0) HANDLE_ERROR(ctx, NULL);
 
     EVP_PKEY_CTX_free(ctx);
