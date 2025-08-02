@@ -45,7 +45,6 @@ bool write_status_response(BufferWriter *const dst, const StatusResponse *const 
     if (!write_var_int(dst, STATUS_RESPONSE)) return false;
 
     BufferWriter buffer = new_buffer_writer(BUFFER_REALLOC_EXTRA_BYTES);
-    size_t       len;
 
     WRITE_CONST_STRING("{\"version\":{\"name\":\"", buffer);
     WRITE_STRING(value->version_name, buffer);
@@ -62,10 +61,7 @@ bool write_status_response(BufferWriter *const dst, const StatusResponse *const 
 
     WRITE_CONST_STRING("\"},\"enforcesSecureChat\":false}", buffer);
 
-    len = buffer.ptr - buffer.start;
-
-    BufferReader reader = {.ptr = buffer.start, .remaining = len};
-    write_prefixed_bytes(dst, &reader, reader.remaining);
+    write_prefixed_bytes(dst, buffer.start, buffer.ptr - buffer.start);
 
     free(buffer.start);
 
