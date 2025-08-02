@@ -30,7 +30,9 @@ int send_buffer_writer(int socket, const BufferWriter *src);
 bool buffer_writer_ensure_can_write(BufferWriter *this, size_t n);
 
 /// writes n bytes from buffer reader to the buffer writer
-bool write_prefixed_bytes(BufferWriter *dst, BufferReader *src, size_t n);
+bool write_prefixed_bytes_from_reader(BufferWriter *dst, BufferReader *src, size_t n);
+
+bool write_prefixed_bytes(BufferWriter *dst, const void *src, size_t n);
 
 /// allocates new array into out_data and reads the prefixed bytes into it.
 /// puts the length of the array into out_size
