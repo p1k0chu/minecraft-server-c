@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "var_int.h"
 
+#include <curl/curl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -102,5 +103,21 @@ bool read_prefixed_string(char **const dst, BufferReader *const src) {
     buffer_reader_increment(src, length);
 
     return true;
+}
+
+/// curl write callback. userdata must be a pointer to buffer writer
+size_t write_callback_buffer_writer(void *const  ptr,
+                                    const size_t size,
+                                    const size_t nmemb,
+                                    void *const  userdata) {
+    BufferWriter *writer     = userdata;
+    const size_t  total_size = size * nmemb;
+
+    if (!buffer_writer_ensure_can_write(writer, total_size)) return CURL_WRITEFUNC_ERROR;
+
+    memcpy(writer->ptr, ptr, total_size);
+    writer->ptr += total_size;
+
+    return total_size;
 }
 
