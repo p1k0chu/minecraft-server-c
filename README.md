@@ -1,11 +1,17 @@
 # minecraft-server-c
 
-this is a minimal Minecraft server impl in C.
-
+this is a minimal Minecraft server impl in C.  
 it only has a working MOTD and nothing else (yet)
+
+It depends on OpenSSL for libcrypto.so.  
+on linux, you can install it with your package manager.  
+for example, on Arch Linux it's `pacman -S openssl`
 
 ## Building
 
+Install dependencies.
+
+And then:
 ```sh
 git clone https://github.com/p1k0chu/minecraft-server-c
 cd minecraft-server-c
