@@ -6,6 +6,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c23 -Wall -Wextra -Werror")
 
 find_package(OpenSSL REQUIRED)
 find_package(cJSON REQUIRED)
+find_package(CURL REQUIRED)
 
 include_directories(include)
 
@@ -21,4 +22,5 @@ add_executable(main main.c
 
 target_link_libraries(main OpenSSL::Crypto)
 target_link_libraries(main ${CJSON_LIBRARY})
+target_link_libraries(main CURL::libcurl)
 
