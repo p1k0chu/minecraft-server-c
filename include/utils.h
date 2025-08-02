@@ -13,6 +13,10 @@
 
 #define COOL_PERROR(msg) perror(__FILE_NAME__ ":" XSTR(__LINE__) " " msg "\n")
 
+#define LOG(file, msg) fprintf(file, __FILE_NAME__ ":" XSTR(__LINE__) " " msg "\n");
+#define LOGF(file, msg, ...) \
+    fprintf(file, __FILE_NAME__ ":" XSTR(__LINE__) " " msg "\n", __VA_ARGS__);
+
 #define ERROR(msg)        \
     {                     \
         COOL_PERROR(msg); \
