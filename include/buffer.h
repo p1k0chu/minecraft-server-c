@@ -42,3 +42,8 @@ bool read_prefixed_bytes(char **out_data, size_t *out_size, BufferReader *src);
 /// resulting string IS null terminated.
 bool read_prefixed_string(char **dst, BufferReader *src);
 
+size_t write_callback_buffer_writer(void *const  ptr,
+                                    const size_t size,
+                                    const size_t nmemb,
+                                    void *const  userdata);
+
