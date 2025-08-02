@@ -11,8 +11,8 @@ git clone https://github.com/p1k0chu/minecraft-server-c
 cd minecraft-server-c
 mkdir build
 cd build
-cmake ../src
-cmake --build .
+cmake ..
+make
 ```
 
 now you can run the executable
