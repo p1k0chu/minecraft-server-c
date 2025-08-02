@@ -14,9 +14,11 @@ inline void buffer_reader_increment(BufferReader *const this, const size_t n) {
 }
 
 BufferWriter new_buffer_writer(const size_t initial_capacity) {
+    if (initial_capacity <= 0) return (BufferWriter){};
+
     char *ptr = malloc(initial_capacity);
 
-    if (ptr == NULL && initial_capacity > 0) {
+    if (ptr == NULL) {
         ERROR("failed to allocate a buffer");
     }
 
