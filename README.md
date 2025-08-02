@@ -7,6 +7,19 @@ It depends on OpenSSL for libcrypto.so.
 on linux, you can install it with your package manager.  
 for example, on Arch Linux it's `pacman -S openssl`
 
+it depends on [cJSON](https://github.com/DaveGamble/cJSON)
+<details>
+  <summary>cJSON installation</summary>
+  
+```sh
+git clone https://github.com/DaveGamble/cJSON
+mkdir cJSON/build
+cd cJSON/build
+cmake ..
+sudo make install
+```
+</details>
+
 ## Building
 
 Install dependencies.
