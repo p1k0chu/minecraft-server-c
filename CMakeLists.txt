@@ -11,16 +11,19 @@ find_package(CURL REQUIRED)
 include_directories(include)
 
 add_executable(main main.c
-                    var_int.c
-                    buffer.c
-                    crypto.c
-                    packets/c2s/handshaking.c
-                    packets/c2s/status.c
-                    packets/handlers/handshaking.c
-                    packets/handlers/status.c
-                    packets/s2c/status.c)
+    var_int.c
+    buffer.c
+    crypto.c
+    packets/c2s/handshaking.c
+    packets/c2s/status.c
+    packets/handlers/handshaking.c
+    packets/handlers/status.c
+    packets/s2c/status.c
+)
 
-target_link_libraries(main OpenSSL::Crypto)
-target_link_libraries(main ${CJSON_LIBRARY})
-target_link_libraries(main CURL::libcurl)
+target_link_libraries(main 
+    OpenSSL::Crypto 
+    ${CJSON_LIBRARY}
+    CURL::libcurl
+)
 
