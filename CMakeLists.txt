@@ -14,6 +14,11 @@ add_library(buffer STATIC
     buffer.c
 )
 
+add_library(varint STATIC
+    var_int.c
+)
+target_link_libraries(varint buffer)
+
 add_library(md5 STATIC lib/md5.c)
 
 add_library(my_uuid STATIC lib/uuid.c)
@@ -23,7 +28,6 @@ target_link_libraries(my_uuid
 )
 
 add_executable(main main.c
-    var_int.c
     crypto.c
     utils.c
     packets/c2s/handshaking.c
@@ -39,5 +43,6 @@ target_link_libraries(main
     CURL::libcurl
     my_uuid
     buffer
+    varint
 )
 
