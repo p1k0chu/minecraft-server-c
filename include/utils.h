@@ -11,7 +11,7 @@
 #define STR(s)  #s
 #define XSTR(s) STR(s)
 
-#define COOL_PERROR(msg) perror(__FILE_NAME__ ":" XSTR(__LINE__) " " msg "\n")
+#define COOL_PERROR(msg) perror(__FILE_NAME__ ":" XSTR(__LINE__) " " msg)
 
 #define LOG(file, msg) fprintf(file, __FILE_NAME__ ":" XSTR(__LINE__) " " msg "\n");
 #define LOGF(file, msg, ...) \
