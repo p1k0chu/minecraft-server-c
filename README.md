@@ -19,3 +19,8 @@ now you can run the executable
 ```sh
 ./main
 ```
+
+## License
+
+Unless otherwise noted in individual file headers, all code in this repository is licensed under the MIT License (see `LICENSE` file).
+
