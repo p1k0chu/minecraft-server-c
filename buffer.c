@@ -52,7 +52,6 @@ bool buffer_writer_ensure_can_write(BufferWriter *const this, const size_t n) {
 
 bool write_bytes_from_reader(BufferWriter *const dst, BufferReader *const src, const size_t n) {
     if (src->remaining < n) return false;
-    if (!write_var_int(dst, n)) return false;
 
     if (!write_prefixed_bytes(dst, src->ptr, n)) return false;
 
@@ -62,6 +61,7 @@ bool write_bytes_from_reader(BufferWriter *const dst, BufferReader *const src, c
 }
 
 bool write_prefixed_bytes(BufferWriter *const dst, const void *const src, const size_t n) {
+    if (!write_var_int(dst, n)) return false;
     if (!buffer_writer_ensure_can_write(dst, n)) return false;
 
     memcpy(dst->ptr, src, n);
