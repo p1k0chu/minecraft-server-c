@@ -10,6 +10,8 @@ find_package(CURL REQUIRED)
 
 include_directories(include)
 
+add_library(md5 STATIC lib/md5.c)
+
 add_executable(main main.c
     var_int.c
     buffer.c
