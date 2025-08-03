@@ -6,6 +6,7 @@ it only has a working MOTD and nothing else (yet)
 It depends on:
 - OpenSSL for libcrypto.so.  
 - [cJSON](https://github.com/DaveGamble/cJSON)
+- libuuid.so
 
 <details>
   <summary>How to install dependencies</summary>
@@ -15,6 +16,9 @@ Example for Arch linux because i use arch btw (i believe you can find the packag
 ```sh
 # openssl
 pacman -S openssl
+
+# libuuid.so
+pacman -S util-linux-libs
 
 # cJSON
 git clone https://github.com/DaveGamble/cJSON
