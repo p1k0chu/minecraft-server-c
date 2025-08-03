@@ -22,6 +22,7 @@ add_executable(main main.c
     var_int.c
     buffer.c
     crypto.c
+    utils.c
     packets/c2s/handshaking.c
     packets/c2s/status.c
     packets/handlers/handshaking.c
@@ -33,5 +34,6 @@ target_link_libraries(main
     OpenSSL::Crypto 
     ${CJSON_LIBRARY}
     CURL::libcurl
+    my_uuid
 )
 

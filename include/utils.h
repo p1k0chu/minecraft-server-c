@@ -1,5 +1,6 @@
 #pragma once
 
+#include <uuid/uuid.h>
 #define check(condition, error_str)       \
     {                                     \
         if (!(condition)) {               \
@@ -32,4 +33,5 @@
         (dst)[len] = 0;                     \
     }
 
+void uuid_for_offline_player(uuid_t out, const char *username);
 
