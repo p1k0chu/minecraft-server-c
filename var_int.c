@@ -47,12 +47,15 @@ bool write_var_int(BufferWriter *const dst, int value) {
 
 int send_var_int(int sockfd, int value) {
     BufferWriter writer = new_buffer_writer(5);
+    int          status = -2;
 
     if (write_var_int(&writer, value)) {
-        return send(sockfd, writer.start, writer.ptr - writer.start, 0);
+        status = send(sockfd, writer.start, writer.ptr - writer.start, 0);
     }
 
-    return -2;
+    free(writer.start);
+
+    return status;
 }
 
 int recv_var_int(int *const dst, const int sockfd) {
