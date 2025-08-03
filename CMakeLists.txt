@@ -12,6 +12,12 @@ include_directories(include)
 
 add_library(md5 STATIC lib/md5.c)
 
+add_library(my_uuid STATIC lib/uuid.c)
+target_link_libraries(my_uuid
+    PUBLIC uuid
+    PRIVATE md5
+)
+
 add_executable(main main.c
     var_int.c
     buffer.c
